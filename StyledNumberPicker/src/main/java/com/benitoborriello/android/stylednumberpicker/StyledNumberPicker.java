@@ -275,7 +275,7 @@ public class StyledNumberPicker extends LinearLayout {
             public void onGlobalLayout() {
                 viewHeight = getHeight();
                 viewWidth = getWidth();
-                if(viewHeight!=null) {
+                if(viewHeight!=null && viewHeight!=0) {
                     getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                     setTopBottomPadding();
