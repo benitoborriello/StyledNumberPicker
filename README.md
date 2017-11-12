@@ -25,6 +25,17 @@ Add Styled NumberPicker to your XML layout file
 	/>
 ```
 
+### Tip
+
+If the Styled NumberPicker is drawn into a hidden view (or the NumberPicker itself is hidden) and gets programmatically shown in a second time, you should manually reset the inner top and bottom padding, using the following command:
+
+```
+mStyledNumberPicker = findViewById(R.id.mStyledNumberPicker);
+mStyledNumberPicker.setTopBottomPadding();
+```
+
+This happens because the Styled NumberPicker can't detect its own height when inflated into a hidden view (Visibility.GONE)
+
 ## Setting values
 
 In layout
@@ -54,8 +65,6 @@ app:textPadding="6dp"
 Programmatically
 
 ```
-mStyledNumberPicker = findViewById(R.id.mStyledNumberPicker);
-
 int textColor = getResources().getDrawable(R.color.colorWhite);
 mStyledNumberPicker.setTextColor(textColor);
 

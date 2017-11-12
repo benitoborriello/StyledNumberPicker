@@ -302,36 +302,6 @@ public class StyledNumberPicker extends LinearLayout {
         mainContainer.addView(newTextView);
     }
 
-    private void setTopBottomPadding() {
-        ViewGroup.LayoutParams lp;
-        lp = topPadding.getLayoutParams();
-        lp.height = viewHeight/2;
-        topPadding.setLayoutParams(lp);
-        lp = bottomPadding.getLayoutParams();
-        lp.height = viewHeight/2;
-        topPadding.setLayoutParams(lp);
-        //forceLayout();
-    }
-
-    private void setMargins (View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-        }
-    }
-
-    private int getRowHeight() {
-        int elementHeight = 0;
-
-        try {
-            elementHeight = rows.get(0).getHeight();
-        } catch (Exception e ) {
-            elementHeight = 0;
-        }
-
-        return elementHeight;
-    }
-
     private void clearRows() {
         try {
             for(int i=0;i<rows.size();i++) {
@@ -506,6 +476,36 @@ public class StyledNumberPicker extends LinearLayout {
     // ************** //
     //  UI functions  //
     // ************** //
+    public void setTopBottomPadding() {
+        ViewGroup.LayoutParams lp;
+        lp = topPadding.getLayoutParams();
+        lp.height = viewHeight/2;
+        topPadding.setLayoutParams(lp);
+        lp = bottomPadding.getLayoutParams();
+        lp.height = viewHeight/2;
+        topPadding.setLayoutParams(lp);
+        //forceLayout();
+    }
+
+    private void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+        }
+    }
+
+    private int getRowHeight() {
+        int elementHeight = 0;
+
+        try {
+            elementHeight = rows.get(0).getHeight();
+        } catch (Exception e ) {
+            elementHeight = 0;
+        }
+
+        return elementHeight;
+    }
+
     public void setTopGradientBackground(Drawable background) {
         topGradient.setBackground(background);
     }
