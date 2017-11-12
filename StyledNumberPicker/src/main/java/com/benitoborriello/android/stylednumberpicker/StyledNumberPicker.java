@@ -268,6 +268,23 @@ public class StyledNumberPicker extends LinearLayout {
             }
         };
 
+        // If the view is initialized with Visibility.GONE, it does not get drawn correctly.
+        // This listener waits for layout parameters to be set, then calls the needed methods
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                viewHeight = getHeight();
+                viewWidth = getWidth();
+                if(viewHeight!=null) {
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    setTopBottomPadding();
+                    setSelectedItemBorders();
+                    setPosition(currentPosition);
+                }
+            }
+        });
+
     }
 
     private void bindViews() {
@@ -476,7 +493,7 @@ public class StyledNumberPicker extends LinearLayout {
     // ************** //
     //  UI functions  //
     // ************** //
-    public void setTopBottomPadding() {
+    private void setTopBottomPadding() {
         ViewGroup.LayoutParams lp;
         lp = topPadding.getLayoutParams();
         lp.height = viewHeight/2;
