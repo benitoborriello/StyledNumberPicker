@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <declare-styleable name="app">
+        <attr name="textPadding" format="dimension"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColor" format="color"/>
+        <attr name="minValue" format="integer"/>
+        <attr name="maxValue" format="integer"/>
+        <attr name="selectedBordersBackground" format="color"/>
+        <attr name="topGradientBackground" format="color"/>
+        <attr name="bottomGradientBackground" format="color"/>
+        <attr name="gradientsHeight" format="dimension"/>
+        <attr name="scrollSound" format="boolean"/>
+        <attr name="scrollSoundResource" format="reference"/>
+    </declare-styleable>
+</resources>
