@@ -11,6 +11,5 @@
         <attr name="bottomGradientBackground" format="color"/>
         <attr name="gradientsHeight" format="dimension"/>
         <attr name="scrollSound" format="boolean"/>
-        <attr name="scrollSoundResource" format="reference"/>
     </declare-styleable>
 </resources>

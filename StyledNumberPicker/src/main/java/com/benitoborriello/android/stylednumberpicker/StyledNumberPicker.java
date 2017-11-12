@@ -5,13 +5,8 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -129,8 +124,8 @@ public class StyledNumberPicker extends LinearLayout {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.app, 0, 0);
         try {
-            textPadding = ta.getDimensionPixelSize(R.styleable.app_textPadding, 0);
-            textSize = ta.getDimensionPixelSize(R.styleable.app_textSize, 10);
+            textPadding = ta.getDimensionPixelSize(R.styleable.app_textPadding, convertDpToPx(0));
+            textSize = ta.getDimensionPixelSize(R.styleable.app_textSize, convertDpToPx(18));
             maxValue = ta.getInteger(R.styleable.app_maxValue, 10);
             minValue = ta.getInteger(R.styleable.app_minValue, 0);
             textColor = ta.getColor(R.styleable.app_textColor, getResources().getColor(android.R.color.black));
@@ -139,7 +134,6 @@ public class StyledNumberPicker extends LinearLayout {
             bottomGradientBackground = ta.getDrawable(R.styleable.app_bottomGradientBackground);
             gradientsHeight = ta.getDimensionPixelOffset(R.styleable.app_gradientsHeight, convertDpToPx(40));
             scrollSound = ta.getBoolean(R.styleable.app_scrollSound, true);
-            soundEffectId = ta.getInteger(R.styleable.app_scrollSoundResource, SoundEffectConstants.CLICK);
         } finally {
             ta.recycle();
         }
@@ -180,23 +174,18 @@ public class StyledNumberPicker extends LinearLayout {
             bottomGradientBackground = getResources().getDrawable(R.drawable.gradient_bottom);
         }
 
+        soundEffectId = SoundEffectConstants.CLICK;
         if(scrollSound==null) {
             scrollSound = true;
-        }
-
-        if(soundEffectId==null) {
-            soundEffectId = SoundEffectConstants.CLICK;
         }
 
         if(gradientsHeight==null) {
             gradientsHeight = convertDpToPx(40);
         }
 
-        topSelectedItemBorder.setBackground(selectedBordersBackground);
-        bottomSelectedItemBorder.setBackground(selectedBordersBackground);
-
-        topGradient.setBackground(topGradientBackground);
-        bottomGradient.setBackground(bottomGradientBackground);
+        setSelectedBordersBackground(selectedBordersBackground);
+        setTopGradientBackground(topGradientBackground);
+        setBottomGradientBackground(bottomGradientBackground);
 
         ViewGroup.LayoutParams gradientLayoutParams;
         gradientLayoutParams = topGradient.getLayoutParams();
@@ -322,15 +311,6 @@ public class StyledNumberPicker extends LinearLayout {
         lp.height = viewHeight/2;
         topPadding.setLayoutParams(lp);
         //forceLayout();
-    }
-
-    private void setSelectedItemBorders() {
-        int rowHeight = getRowHeight();
-        int target;
-        target  = (viewHeight / 2) - (rowHeight / 2);
-        setMargins(topSelectedItemBorder,0,target,0,0);
-        target  = (viewHeight / 2) + (rowHeight / 2);
-        setMargins(bottomSelectedItemBorder,0,target,0,0);
     }
 
     private void setMargins (View v, int l, int t, int r, int b) {
@@ -468,17 +448,17 @@ public class StyledNumberPicker extends LinearLayout {
     // *************** //
     //  Row selection  //
     // *************** //
-    public void setPosition(int position) {
-        currentPosition = position;
-        currentValue = getValue(position);
+    public void setPosition(int rowIndex) {
+        currentPosition = rowIndex;
+        currentValue = getValue(rowIndex);
         triggerOnScroll = false;
-        scrollToElement(position);
+        scrollToElement(rowIndex);
         if(changeListener != null) {
-            changeListener.onChange(getCurrentValue(),position);
+            changeListener.onChange(getCurrentValue(), rowIndex);
         }
     }
 
-    public void scrollToElement(int row) {
+    private void scrollToElement(int row) {
         int rowHeight = getRowHeight();
         try {
             mainScroller.smoothScrollTo(mainScroller.getScrollX(), (rowHeight / 2) + (rowHeight * row));
@@ -523,6 +503,61 @@ public class StyledNumberPicker extends LinearLayout {
     }
 
 
+    // ************** //
+    //  UI functions  //
+    // ************** //
+    public void setTopGradientBackground(Drawable background) {
+        topGradient.setBackground(background);
+    }
+
+    public void setBottomGradientBackground(Drawable background) {
+        bottomGradient.setBackground(background);
+    }
+
+    public void setSelectedBordersBackground(Drawable background) {
+        topSelectedItemBorder.setBackground(background);
+        bottomSelectedItemBorder.setBackground(background);
+    }
+
+    private void setSelectedItemBorders() {
+        int rowHeight = getRowHeight();
+        int target;
+        target  = (viewHeight / 2) - (rowHeight / 2);
+        setMargins(topSelectedItemBorder,0,target,0,0);
+        target  = (viewHeight / 2) + (rowHeight / 2);
+        setMargins(bottomSelectedItemBorder,0,target,0,0);
+    }
+
+    public void setTextPadding(int textPaddingPx) {
+        textPadding = textPaddingPx;
+        try {
+            for (int i = 0; i < rows.size();i++) {
+                rows.get(i).setPadding(0,textPadding,0,textPadding);
+            }
+            setSelectedItemBorders();
+        } catch (Exception e) { }
+    }
+
+    public void setTextSize(int textSizePx) {
+        textSize = textSizePx;
+        try {
+            for (int i = 0; i < rows.size();i++) {
+                rows.get(i).setTextSize(textSize);
+            }
+            setSelectedItemBorders();
+        } catch (Exception e) { }
+    }
+
+    public void setTextColor(int color) {
+        textColor = color;
+        try {
+            for (int i = 0; i < rows.size();i++) {
+                rows.get(i).setTextColor(color);
+            }
+        } catch (Exception e) { }
+    }
+
+
     // ***************** //
     //  Scrolling sound  //
     // ***************** //
@@ -530,6 +565,10 @@ public class StyledNumberPicker extends LinearLayout {
         try {
             this.playSoundEffect(soundEffectId);
         } catch (Exception e) { }
+    }
+
+    public void scrollingSoundEnabled(boolean enabled) {
+        scrollSound = enabled;
     }
 
 
@@ -548,7 +587,7 @@ public class StyledNumberPicker extends LinearLayout {
         return Math.round(px);
     }
 
-    private int convertDpToPx(int dp){
+    public int convertDpToPx(int dp){
         return Math.round(dp*(getResources().getDisplayMetrics().xdpi/DisplayMetrics.DENSITY_DEFAULT));
 
     }
@@ -557,11 +596,11 @@ public class StyledNumberPicker extends LinearLayout {
         return Math.round(px/(Resources.getSystem().getDisplayMetrics().xdpi/DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    private float dpFromPx(float px) {
+    private float getDpFromPx(float px) {
         return px / this.getContext().getResources().getDisplayMetrics().density;
     }
 
-    private float pxFromDp(float dp) {
+    private float getPxFromDp(float dp) {
         return dp * this.getContext().getResources().getDisplayMetrics().density;
     }
 
