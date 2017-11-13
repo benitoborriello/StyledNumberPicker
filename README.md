@@ -1,11 +1,11 @@
 # Styled NumberPicker
 
 Fully customizable NumberPicker for Android, in iOS style.
-Stock Android NumberPicker cannot be properly customized. This library should do pretty much everything a NumberPicker is expected to.
+Since Android’s native NumberPicker cannot be properly customized, this library should provide all features expected from a NumberPicker.
 
 ## Include in your Project
 
-Add Styled NumberPicker to the dependencies in your app's build.gradle file
+Add Styled NumberPicker to your app's Gradle file dependencies
 
 ```
 compile 'com.github.benitoborriello:StyledNumberPicker:1.0.0'
@@ -26,6 +26,8 @@ Add Styled NumberPicker to your XML layout file
 ```
 
 ## Setting values
+
+Setting minimum and maximum numbers shown by the picker
 
 In layout
 
@@ -72,7 +74,7 @@ mStyledNumberPicker.setTextSize( mStyledNumberPicker.convertDpToPx(10) );
 
 ## Setting selected item borders
 
-By default, the selected item is whitin 2 horizontal white lines, automatically. To change it:
+By default, 2 horizontal white lines frame the selected item. Below, you can see how to change their color.
 
 In layout
 
@@ -95,14 +97,14 @@ mStyledNumberPicker.setSelectedBordersBackground(selectedItemBorder);
 
 ### Removing selected item borders
 
-To remove the said lines, just set selectedBordersBackground to transparent (e.g. #00000000).
+To remove said lines, just set selectedBordersBackground to transparent (e.g. #00000000).
 
 
 ## Setting top and bottom gradient resources
 
-Top and bottom gradients can result in a nice 3D effect. By default the gradients are transparent->white. The default height is 40dp for each gradient.
+Top and bottom gradients can result in a nice 3D effect. By default the gradients are transparent->white. Default height is 40dp.
 
-To specify different gradients, first create 2 XML drawable files like the following ones
+To specify different gradients, first create 2 XML drawable files like the following ones:
 
 drawable/gradient_top.xml
 ```
